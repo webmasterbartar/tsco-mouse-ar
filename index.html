@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>موس TSCO AR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="app.js"></script>
+    <style>
+        .ar-pointer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body style="margin: 0px; overflow: hidden;">
+    <!-- اضافه کردن یک پیام برای راهنمایی کاربر -->
+    <div style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); 
+                background: rgba(0,0,0,0.7); color: white; padding: 10px; 
+                border-radius: 5px; z-index: 1000; text-align: center;">
+        دوربین را به سمت موس TSCO بگیرید
+    </div>
+
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix;">
+        <a-marker type="pattern" url="patterns/mouse-pattern.patt">
+            <!-- نشانگر ثابت -->
+            <a-entity
+                look-at="[camera]"
+                position="0 0.2 0">
+                <!-- آیکون نشانگر -->
+                <a-image
+                    src="assets/pointer.png"
+                    scale="0.5 0.5 0.5"
+                    position="0 0 0">
+                </a-image>
+                <!-- متن شناور -->
+                <a-text
+                    value="TSCO Gaming Mouse\nHigh Performance"
+                    position="0 0.3 0"
+                    scale="0.5 0.5 0.5"
+                    align="center"
+                    color="#FFFFFF"
+                    billboard>
+                </a-text>
+            </a-entity>
+            
+            <!-- اطلاعات مشخصات -->
+            <a-entity
+                look-at="[camera]"
+                position="0.5 0 0">
+                <a-plane
+                    color="#000000"
+                    opacity="0.7"
+                    height="0.5"
+                    width="1"
+                    position="0 0.25 0">
+                    <a-text
+                        value="DPI: 4000\nButtons: 6\nRGB: Yes"
+                        position="0 0 0.01"
+                        scale="0.5 0.5 0.5"
+                        align="left"
+                        color="#FFFFFF">
+                    </a-text>
+                </a-plane>
+            </a-entity>
+        </a-marker>
+        
+        <a-entity camera></a-entity>
+    </a-scene>
+</body>
+</html> 
