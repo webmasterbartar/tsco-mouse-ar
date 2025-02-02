@@ -14,39 +14,77 @@
         دوربین را به سمت مارکر Hiro بگیرید
     </div>
 
-    <!-- تنظیمات ساده‌تر -->
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: true;">
-        <a-marker preset="hiro">
-            <!-- فقط یک مکعب قرمز ساده -->
+    <a-scene embedded
+             arjs="sourceType: webcam; 
+                   debugUIEnabled: true;
+                   detectionMode: mono;
+                   maxDetectionRate: 60;
+                   canvasWidth: 1280;
+                   canvasHeight: 960;
+                   displayWidth: 1280;
+                   displayHeight: 960;
+                   patternRatio: 0.75;
+                   sourceWidth: 1280;
+                   sourceHeight: 960;
+                   trackingMethod: best;">
+
+        <a-marker preset="hiro"
+                 smooth="true"
+                 smoothCount="10"
+                 smoothTolerance="0.01"
+                 smoothThreshold="5"
+                 raycaster="objects: .clickable"
+                 emitevents="true"
+                 cursor="fuse: false; rayOrigin: mouse;">
+
+            <!-- مکعب با انیمیشن -->
             <a-box position="0 0.5 0" 
-                   material="color: red;">
+                   material="color: red;"
+                   animation="property: rotation; 
+                             to: 0 360 0; 
+                             dur: 2000;
+                             easing: linear; 
+                             loop: true">
             </a-box>
+
+            <!-- متن با کیفیت بالاتر -->
+            <a-text value="TSCO Mouse"
+                    align="center"
+                    position="0 1 0"
+                    rotation="-90 0 0"
+                    color="white"
+                    scale="2 2 2"
+                    font="https://cdn.aframe.io/fonts/Roboto-msdf.json"
+                    negate="false">
+            </a-text>
         </a-marker>
         
-        <a-entity camera></a-entity>
+        <a-entity camera look-controls></a-entity>
     </a-scene>
 
-    <!-- اضافه کردن کد تست -->
     <script>
         window.onload = function() {
-            // بررسی لود شدن کتابخانه‌ها
-            if (typeof AFRAME === 'undefined') {
-                console.error('A-Frame not loaded');
-                alert('خطا در بارگذاری A-Frame');
-            } else {
-                console.log('A-Frame loaded successfully');
-            }
+            const marker = document.querySelector('a-marker');
+            
+            marker.addEventListener('markerFound', function() {
+                console.log('Marker Found!');
+            });
+            
+            marker.addEventListener('markerLost', function() {
+                console.log('Marker Lost!');
+            });
 
-            // بررسی دسترسی به دوربین
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function(stream) {
-                    console.log('Camera access granted');
-                    stream.getTracks().forEach(track => track.stop());
-                })
-                .catch(function(err) {
-                    console.error('Camera access error:', err);
-                    alert('خطا در دسترسی به دوربین');
-                });
+            // تنظیم کیفیت دوربین
+            navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: 'environment',
+                    width: { ideal: 1280 },
+                    height: { ideal: 960 }
+                }
+            }).then(function(stream) {
+                console.log('Camera initialized with high quality');
+                stream.getTracks().forEach(track => track.stop());
+            });
         };
     </script>
 </body>
