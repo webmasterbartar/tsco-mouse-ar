@@ -1,20 +1,31 @@
 window.onload = function() {
-    const marker = document.querySelector('a-marker');
     const scene = document.querySelector('a-scene');
-    
-    // وضعیت نمایش مارکر
-    let markerVisible = false;
-    
+    const marker = document.querySelector('a-marker');
+    const statusDiv = document.querySelector('#status');
+
+    // بررسی وضعیت لود شدن صحنه
+    scene.addEventListener('loaded', function () {
+        console.log('Scene loaded');
+        statusDiv.innerText = 'صحنه AR آماده شد';
+    });
+
+    // بررسی تشخیص مارکر
     marker.addEventListener('markerFound', function() {
-        markerVisible = true;
-        console.log('مارکر پیدا شد!');
+        console.log('Marker found');
+        statusDiv.innerText = 'مارکر پیدا شد!';
     });
-    
+
     marker.addEventListener('markerLost', function() {
-        markerVisible = false;
-        console.log('مارکر از دست رفت!');
+        console.log('Marker lost');
+        statusDiv.innerText = 'مارکر از دست رفت';
     });
-    
+
+    // بررسی خطاهای احتمالی
+    scene.addEventListener('arError', function(ev) {
+        console.error('AR error:', ev);
+        statusDiv.innerText = 'خطا در AR: ' + ev.detail.error;
+    });
+
     // اضافه کردن ویژگی look-at برای همه المان‌های متنی
     const texts = document.querySelectorAll('a-text');
     texts.forEach(text => {
