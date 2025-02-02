@@ -6,7 +6,7 @@ window.onload = function() {
     // بررسی وضعیت لود شدن صحنه
     scene.addEventListener('loaded', function () {
         console.log('Scene loaded');
-        statusDiv.innerText = 'صحنه AR آماده شد';
+        statusDiv.innerText = 'صحنه AR آماده شد - لطفا مارکر را نشان دهید';
     });
 
     // بررسی تشخیص مارکر
@@ -17,7 +17,7 @@ window.onload = function() {
 
     marker.addEventListener('markerLost', function() {
         console.log('Marker lost');
-        statusDiv.innerText = 'مارکر از دست رفت';
+        statusDiv.innerText = 'لطفا مارکر را مقابل دوربین بگیرید';
     });
 
     // بررسی خطاهای احتمالی
