@@ -3,44 +3,51 @@
 <head>
     <title>موس TSCO AR</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- تغییر به نسخه جدیدتر کتابخانه‌ها -->
-    <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    <!-- استفاده از نسخه‌های پایدار قدیمی‌تر -->
+    <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+    <script src="https://raw.githack.com/jeromeetienne/AR.js/2.0.8/aframe/build/aframe-ar.js"></script>
 </head>
-<body style="margin: 0">
+<body style="margin: 0; overflow: hidden;">
     <div style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); 
                 background: rgba(0,0,0,0.7); color: white; padding: 10px; 
                 border-radius: 5px; z-index: 1000; text-align: center;">
         دوربین را به سمت مارکر Hiro بگیرید
     </div>
 
-    <a-scene embedded
-             arjs='sourceType: webcam; 
-                   debugUIEnabled: true; 
-                   detectionMode: mono;
-                   maxDetectionRate: 60;
-                   canvasWidth: 1280;
-                   canvasHeight: 960;'>
-
-        <!-- استفاده از مارکر پیش‌فرض Hiro -->
+    <!-- تنظیمات ساده‌تر -->
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: true;">
         <a-marker preset="hiro">
-            <!-- یک مکعب ساده برای تست -->
+            <!-- فقط یک مکعب قرمز ساده -->
             <a-box position="0 0.5 0" 
-                   material="color: red;"
-                   scale="1 1 1">
+                   material="color: red;">
             </a-box>
-            
-            <!-- متن ساده -->
-            <a-text value="TSCO Mouse"
-                    align="center"
-                    position="0 1 0"
-                    rotation="-90 0 0"
-                    color="white"
-                    scale="2 2 2">
-            </a-text>
         </a-marker>
-
+        
         <a-entity camera></a-entity>
     </a-scene>
+
+    <!-- اضافه کردن کد تست -->
+    <script>
+        window.onload = function() {
+            // بررسی لود شدن کتابخانه‌ها
+            if (typeof AFRAME === 'undefined') {
+                console.error('A-Frame not loaded');
+                alert('خطا در بارگذاری A-Frame');
+            } else {
+                console.log('A-Frame loaded successfully');
+            }
+
+            // بررسی دسترسی به دوربین
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    console.log('Camera access granted');
+                    stream.getTracks().forEach(track => track.stop());
+                })
+                .catch(function(err) {
+                    console.error('Camera access error:', err);
+                    alert('خطا در دسترسی به دوربین');
+                });
+        };
+    </script>
 </body>
 </html> 
