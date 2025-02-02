@@ -3,133 +3,54 @@
 <head>
     <title>موس TSCO AR</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- استفاده از نسخه‌های پایدار قدیمی‌تر -->
-    <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
-    <script src="https://raw.githack.com/jeromeetienne/AR.js/2.0.8/aframe/build/aframe-ar.js"></script>
+    <!-- تغییر به نسخه جدیدتر -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
     <div style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); 
                 background: rgba(0,0,0,0.7); color: white; padding: 10px; 
                 border-radius: 5px; z-index: 1000; text-align: center;">
-        دوربین را به سمت مارکر بگیرید
+        دوربین را به سمت مارکر Hiro بگیرید
     </div>
 
-    <a-scene embedded
-             arjs="sourceType: webcam; 
-                   debugUIEnabled: true;
-                   detectionMode: mono;
-                   maxDetectionRate: 60;
-                   canvasWidth: 1280;
-                   canvasHeight: 960;
-                   displayWidth: 1280;
-                   displayHeight: 960;
-                   patternRatio: 0.75;">
+    <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: true;'>
+        <a-marker preset="hiro">
+            <!-- دایره متحرک -->
+            <a-ring position="0 0.2 0"
+                   rotation="-90 0 0"
+                   radius-inner="0.3"
+                   radius-outer="0.4"
+                   material="color: #00ff88; opacity: 0.8"
+                   animation="property: rotation; 
+                             to: -90 360 0; 
+                             dur: 4000; 
+                             easing: linear; 
+                             loop: true">
+            </a-ring>
 
-        <a-marker preset="hiro" smooth="true" smoothCount="10">
-            <a-entity position="0 0 0">
-                <!-- دایره متحرک -->
-                <a-ring position="0 0.2 0"
-                       rotation="-90 0 0"
-                       radius-inner="0.3"
-                       radius-outer="0.4"
-                       material="color: #00ff88; opacity: 0.8"
-                       animation="property: rotation; 
-                                 to: -90 360 0; 
-                                 dur: 4000; 
-                                 easing: linear; 
-                                 loop: true">
-                </a-ring>
-
-                <!-- دایره داخلی ثابت -->
-                <a-ring position="0 0.1 0"
-                       rotation="-90 0 0"
-                       radius-inner="0.2"
-                       radius-outer="0.25"
-                       material="color: #ffffff; opacity: 0.6">
-                </a-ring>
-
-                <!-- عنوان اصلی با انیمیشن -->
-                <a-text value="TSCO Gaming Mouse"
-                       align="center"
-                       position="0 0.5 0"
-                       rotation="-90 0 0"
-                       color="#ffffff"
-                       scale="1 1 1"
-                       animation="property: position; 
-                                 dir: alternate;
-                                 dur: 1000;
-                                 easing: easeInOutSine;
-                                 loop: true;
-                                 to: 0 0.6 0">
-                </a-text>
-
-                <!-- پنل مشخصات -->
-                <a-entity position="0 0.3 0">
-                    <a-plane color="#000000" 
-                            opacity="0.8"
-                            height="0.4" 
-                            width="1.2"
-                            position="0 0 -0.1"
-                            rotation="-90 0 0">
-                        <a-text value="Professional Gaming Mouse\n\nDPI: 4000\nRGB Lighting\n6 Programmable Buttons"
-                               position="0 0 0.01"
-                               align="center"
-                               baseline="center"
-                               color="#00ff88"
-                               scale="0.4 0.4 1"
-                               animation="property: scale;
-                                         dir: alternate;
-                                         dur: 1500;
-                                         easing: easeInOutSine;
-                                         loop: true;
-                                         to: 0.45 0.45 1">
-                        </a-text>
-                    </a-plane>
-                </a-entity>
-
-                <!-- نشانگر پایین -->
-                <a-ring position="0 0 0"
-                       rotation="-90 0 0"
-                       radius-inner="0.1"
-                       radius-outer="0.15"
-                       material="color: #00ff88; opacity: 0.5"
-                       animation="property: scale;
-                                 dir: alternate;
-                                 dur: 1000;
-                                 easing: easeInOutSine;
-                                 loop: true;
-                                 to: 1.2 1.2 1.2">
-                </a-ring>
-            </a-entity>
+            <!-- متن اصلی -->
+            <a-text value="TSCO Gaming Mouse"
+                   align="center"
+                   position="0 0.5 0"
+                   rotation="-90 0 0"
+                   color="#ffffff"
+                   scale="1 1 1">
+            </a-text>
         </a-marker>
         
-        <a-entity camera look-controls></a-entity>
+        <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-        window.onload = function() {
-            const marker = document.querySelector('a-marker');
-            
-            marker.addEventListener('markerFound', function() {
-                console.log('Marker Found!');
-            });
-            
-            marker.addEventListener('markerLost', function() {
-                console.log('Marker Lost!');
-            });
+        // اضافه کردن event listener برای اطمینان از کارکرد
+        window.addEventListener('camera-init', (data) => {
+            console.log('camera-init', data);
+        });
 
-            // تنظیم کیفیت دوربین
-            navigator.mediaDevices.getUserMedia({
-                video: {
-                    facingMode: 'environment',
-                    width: { ideal: 1280 },
-                    height: { ideal: 960 }
-                }
-            }).then(function(stream) {
-                console.log('Camera initialized with high quality');
-                stream.getTracks().forEach(track => track.stop());
-            });
-        };
+        window.addEventListener('camera-error', (error) => {
+            console.log('camera-error', error);
+        });
     </script>
 </body>
 </html> 
